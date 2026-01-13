@@ -1,0 +1,61 @@
+# DAG Configuration File
+
+# ========== DAG Mode Configuration ==========
+dag:
+  # Enable DAG mode (default: true)
+  enabled: true
+
+  # Maximum number of nodes allowed in DAG
+  max_nodes: 10
+
+  # Branching constraints
+  max_branches: 5        # Maximum child nodes per node
+  max_convergence: 3     # Maximum parent nodes per node
+  max_dag_depth: 6       # Maximum DAG depth
+
+  # ========== DAG Adaptive Optimizer Configuration ==========
+  adaptive_optimizer:
+    # Master switch: Enable adaptive optimizer
+    enabled: true
+
+    # Feature switch: Node skipping (skip redundant retrieval)
+    skip_enabled: true
+    skip_confidence_threshold: 0.7  # Confidence threshold for skipping decision
+
+    # Final layer completeness check
+    final_completion_check_enabled: false
+    final_insertion_max: 1                    # Maximum nodes to insert in final layer
+    final_completion_threshold: 0.85          # Confidence threshold for "incomplete" judgment
+    final_completion_llm_temperature: 0.1     # LLM temperature for completeness check
+
+  # ========== Incremental Retrieval Configuration ==========
+  incremental_retrieval:
+    # Enable incremental retrieval (when inference→retrieval switching occurs)
+    enabled: true
+    # When disabled: inference→retrieval switching still occurs, but uses full retrieval (re-query all info, activate all channels)
+    # When enabled: only query missing information, selectively activate channels
+
+  # Node execution configuration
+  execution:
+    # Maximum retry attempts per node
+    max_retry: 1
+
+    # Node timeout in seconds (NOT YET IMPLEMENTED - placeholder for future feature)
+    node_timeout: 60
+
+    # Failure strategy: stop | skip
+    # stop: halt execution on failure
+    # skip: skip failed node and continue
+    failure_strategy: "stop"
+
+    # Channel-level retry configuration (NodeAgent retry for MySQL/Neo4j/Vector individually)
+    channel_retry_max: 2
+    channel_retry_enabled: false
+
+  # DAG validation configuration
+  validation:
+    check_cycles: true      # Cycle detection
+    check_orphans: true     # Orphan node detection
+    check_connectivity: true # Connectivity validation
+    # Note: strict_validation removed - unified semantic validation used
+

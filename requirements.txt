@@ -1,0 +1,24 @@
+# Triple RAG Dependencies
+
+# Core dependencies
+openai>=1.0.0
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+pyyaml>=6.0.0
+
+# Database dependencies
+pymysql>=1.1.0
+neo4j>=5.0.0
+chromadb>=0.4.0
+
+# Vector and embedding
+sentence-transformers>=2.2.0
+faiss-cpu>=1.7.0
+
+# Data processing
+numpy>=1.24.0
+pandas>=2.0.0
+sqlparse>=0.4.0
+
+# Utilities
+tiktoken>=0.5.0
