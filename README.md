@@ -6,6 +6,8 @@ Triple RAG implements complex query decomposition and parallel processing throug
 
 The core codes and data related to the paper have been made open source. Due to time constraints, some parts are still under review and will be made open source as soon as possible.
 
+All the data of the benchmark can be obtained from https://huggingface.co/datasets/oo123123/TripleRAG.
+
 ---
 
 ## 🌟 Key Features
