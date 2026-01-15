@@ -3,7 +3,10 @@
 **An Industrial-Grade Multi-Source Heterogeneous Data Intelligent Q&A System**
 
 Triple RAG implements complex query decomposition and parallel processing through DAG (Directed Acyclic Graph) orchestration, supporting multi-modal fusion retrieval across structured data (SQLite/MySQL), graph data (Neo4j), and semantic data (Vector DB).
+
 The core codes and data related to the paper have been made open source. Due to time constraints, some parts are still under review and will be made open source as soon as possible.
+
+All the data of the benchmark can be obtained from https://huggingface.co/datasets/oo123123/TripleRAG.
 
 ---
 
