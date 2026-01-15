@@ -3,9 +3,7 @@
 **An Industrial-Grade Multi-Source Heterogeneous Data Intelligent Q&A System**
 
 Triple RAG implements complex query decomposition and parallel processing through DAG (Directed Acyclic Graph) orchestration, supporting multi-modal fusion retrieval across structured data (SQLite/MySQL), graph data (Neo4j), and semantic data (Vector DB).
-
 The core codes and data related to the paper have been made open source. Due to time constraints, some parts are still under review and will be made open source as soon as possible.
-
 All the data of the benchmark can be obtained from https://huggingface.co/datasets/oo123123/TripleRAG.
 
 ---
@@ -55,7 +53,7 @@ class LLMConfig:
 
 @dataclass
 class SQLiteConfig:
-    database_path: str = './dataset/databases/your_database.db'
+    database_path: str = './dataset/sqlite/ChainHopQA.db'  # or ReconHotPotQA.db
 
 @dataclass
 class Neo4jConfig:
@@ -66,13 +64,30 @@ class Neo4jConfig:
 
 ### 3. Prepare Dataset
 
-Place your datasets in the `dataset/` directory. See `dataset/DATA_FORMAT.md` for detailed format specifications.
+Due to data size limitations, GitHub only contains the QAPair dataset. The complete benchmark data can be obtained from [https://huggingface.co/datasets/oo123123/TripleRAG](https://huggingface.co/datasets/oo123123/TripleRAG).
 
-**Required files**:
-- `dataset/queries.json` - Input queries
-- `dataset/databases/*.db` - SQLite database
-- Neo4j graph database (configured connection)
-- `dataset/vector_db/bench/` - ChromaDB collection
+**GitHub Repository (Limited)**:
+- `dataset/QAPair/` - Question-answer pairs for ChainHopQA and HotpotQA (Reconstruction)
+  - ChainHopQA.json, ChainHopQA_full.json
+  - ReconHotPotQA.json, ReconHotPotQA_full.json
+
+**Complete Dataset (Hugging Face)**:
+- Full multimodal benchmark data organized by benchmark type:
+  - **SQLite databases**: ChainHopQA.db, ReconHotPotQA.db
+  - **Neo4j graph databases**: ChainHopQA and ReconHotPotQA graph databases
+  - **Vector databases**: ChainHopQA and ReconHotPotQA ChromaDB collections
+- See `dataset/README.md` for detailed structure and setup instructions
+
+**Required files for full system** (choose your benchmark):
+- **ChainHopQA benchmark**:
+  - `dataset/sqlite/ChainHopQA.db` - SQLite database
+  - `dataset/neo4j/ChainHopQA/` - Neo4j graph database
+  - `dataset/vector_db/ChainHopQA/` - ChromaDB collection
+- **ReconHotPotQA benchmark**:
+  - `dataset/sqlite/ReconHotPotQA.db` - SQLite database  
+  - `dataset/neo4j/ReconHotPotQA/` - Neo4j graph database
+  - `dataset/vector_db/ReconHotPotQA/` - ChromaDB collection
+- `dataset/queries.json` - Input queries (create based on QAPair data)
 
 ### 4. Run Batch Processing
 
@@ -132,9 +147,10 @@ Triple_RAG_main/
 ├── README.md              # This file
 ├── LICENSE                # MIT License
 ├── requirements.txt       # Python dependencies
-├── main.py               # Entry point (batch processing)
-├── dataset/              # Dataset directory (prepare your own data)
-│   └── DATA_FORMAT.md    # Data format specification
+├── main.py               # Entry point
+├── dataset/              # Dataset directory
+│   ├── README.md         # Dataset documentation
+│   └── QAPair/           # Question-answer pairs
 ├── config/               # Configuration files
 │   ├── config.py         # Main configuration
 │   ├── dag_config.yaml   # DAG execution config
@@ -174,7 +190,51 @@ Update `config/config.py` with your database credentials and paths.
 
 ---
 
-## 💡 Core Innovations
+## � Experimental Results
+
+### Triple-Modal Multi-Hop Benchmark Results
+
+TripleRAG demonstrates superior performance across both ChainHopQA and HotpotQA (Reconstruction) datasets:
+
+| Method | Model | ChainHopQA | HotpotQA (Reconstruction) |
+|--------|-------|------------|---------------------------|
+| | | **Str-Acc** (%) | **LLM-Acc** (%) | **Str-Acc** (%) | **LLM-Acc** (%) |
+| **TripleRAG** | **Qwen2.5 (7b)** | **27.6** | **30.3** | **27.5** | **39.1** |
+| IRCoT | Qwen2.5 (7b) | 24.7 | 31.1 | 24.8 | 38.3 |
+| LogicRAG | Qwen2.5 (7b) | 25.8 | 29.4 | 25.2 | 37.5 |
+| HippoRAG2 | Qwen2.5 (7b) | 26.6 | 28.4 | 24.7 | 38.5 |
+
+**Key Findings:**
+- **Best Overall Performance**: TripleRAG achieves the highest Str-Acc on both datasets (27.6% and 27.5%)
+- **Superior LLM-Acc**: Best performance on HotpotQA (39.1%) and competitive on ChainHopQA (30.3%)
+- **Stable Performance**: More consistent results across different benchmarks compared to other methods
+
+### Single-Modal Multi-Hop Benchmark Results
+
+DynamicRAG (single-modal variant) shows competitive performance:
+
+| Method | HotpotQA | 2WikiMQA | MuSiQue |
+|--------|----------|----------|---------|
+| | **Str-Acc** | **LLM-Acc** | **Str-Acc** | **LLM-Acc** | **Str-Acc** | **LLM-Acc** |
+| **DynamicRAG** | **57.2** | **62.3** | **61.5** | **58.7** | **29.8** | **36.2** |
+| IRCoT | 52.3 | 59.5 | 61.0 | 58.1 | 29.3 | 35.8 |
+| HippoRAG2 | 56.7 | 61.9 | 50.0 | 47.1 | 27.0 | 32.6 |
+| LogicRAG | - | - | - | - | - | - |
+
+### Ablation Studies
+
+![Multimodal Fusion Ablation Study](./figure/figure2.png)
+
+**Figure 2**: Ablation study on retrieval modalities shows that the full TripleRAG system with multimodal fusion outperforms single-modal approaches by 3.2-3.7 percentage points.
+
+![System Mechanisms Ablation Study](./figure/figure3.png)
+
+**Figure 3**: Ablation study on core mechanisms demonstrates:
+- **Dynamic switching** is crucial: 6.8% Str-Acc drop on ChainHopQA when disabled
+- **LLM-based planning** provides moderate benefits
+- Full system achieves optimal performance
+
+## �� Core Innovations
 
 ### 1. DAG-Based Query Decomposition
 
@@ -286,25 +346,5 @@ If you use Triple RAG in your research, please cite:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
----
-
-## 📧 Contact
-
-For questions or feedback, please open an issue on GitHub.
-
----
-
-## 🙏 Acknowledgments
-
-- Built with [OpenAI API](https://openai.com/api/)
-- Graph database powered by [Neo4j](https://neo4j.com/)
-- Vector search powered by [ChromaDB](https://www.trychroma.com/)
-
----
 
