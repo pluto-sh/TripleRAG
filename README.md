@@ -194,32 +194,19 @@ Update `config/config.py` with your database credentials and paths.
 
 ### Triple-Modal Multi-Hop Benchmark Results
 
-TripleRAG demonstrates superior performance across both ChainHopQA and HotpotQA (Reconstruction) datasets:
+As shown in Table 1, the experimental results on the triple-modal multi-hop QA benchmarks demonstrate that TripleRAG achieves the best or second performance across both the ChainHopQA and HotpotQA (Reconstruction) datasets. Specifically, on the Str-Acc metric, TripleRAG attains 27.6% and 27.5% on ChainHopQA and HotpotQA, respectively, outperforming all baseline graph-based and agentic RAG methods. On the LLM-Acc metric, TripleRAG achieves the best result of 39.1% on HotpotQA, while on ChainHopQA it reaches 30.3%, which is second only to IRCoT (31.1%). In conclusion, compared to current leading agentic RAG methods such as IRCoT and LogicRAG, TripleRAG demonstrates more stable overall performance and higher comprehensive accuracy in multimodal scenarios, validating the effectiveness of its dynamic DAG planning and multimodal retrieval fusion mechanisms.
 
-| Method | Model | ChainHopQA | HotpotQA (Reconstruction) |
-|--------|-------|------------|---------------------------|
-| | | **Str-Acc** (%) | **LLM-Acc** (%) | **Str-Acc** (%) | **LLM-Acc** (%) |
-| **TripleRAG** | **Qwen2.5 (7b)** | **27.6** | **30.3** | **27.5** | **39.1** |
-| IRCoT | Qwen2.5 (7b) | 24.7 | 31.1 | 24.8 | 38.3 |
-| LogicRAG | Qwen2.5 (7b) | 25.8 | 29.4 | 25.2 | 37.5 |
-| HippoRAG2 | Qwen2.5 (7b) | 26.6 | 28.4 | 24.7 | 38.5 |
+![Table 1: Triple-modal Multi-Hop Benchmark Results](./figure/table1.png)
 
-**Key Findings:**
-- **Best Overall Performance**: TripleRAG achieves the highest Str-Acc on both datasets (27.6% and 27.5%)
-- **Superior LLM-Acc**: Best performance on HotpotQA (39.1%) and competitive on ChainHopQA (30.3%)
-- **Stable Performance**: More consistent results across different benchmarks compared to other methods
+**Table 1**: Triple-modal Multi-Hop Benchmark Results. The Bold and the Underlined numbers indicate the best performance and the second-best performance among all models, respectively.
 
 ### Single-Modal Multi-Hop Benchmark Results
 
-DynamicRAG (single-modal variant) shows competitive performance:
+To verify the generalizability of TripleRAG's core mechanisms, DynamicRAG is evaluated on single-modality scenarios. As shown in Table 2, DynamicRAG achieves competitive or slightly better performance compared to LogicRAG and HippoRAG2 across three standard multi-hop reasoning benchmarks. This demonstrates that the core mechanisms—node type pre-allocation and dynamic switching—have broad applicability beyond multimodal scenarios, validating their effectiveness as general design principles for RAG systems.
 
-| Method | HotpotQA | 2WikiMQA | MuSiQue |
-|--------|----------|----------|---------|
-| | **Str-Acc** | **LLM-Acc** | **Str-Acc** | **LLM-Acc** | **Str-Acc** | **LLM-Acc** |
-| **DynamicRAG** | **57.2** | **62.3** | **61.5** | **58.7** | **29.8** | **36.2** |
-| IRCoT | 52.3 | 59.5 | 61.0 | 58.1 | 29.3 | 35.8 |
-| HippoRAG2 | 56.7 | 61.9 | 50.0 | 47.1 | 27.0 | 32.6 |
-| LogicRAG | - | - | - | - | - | - |
+![Table 2: Single-Modal Multi-Hop Benchmark Results](./figure/table2.png)
+
+**Table 2**: Single-Modal Multi-Hop Benchmark Results. The Bold and the Underlined numbers indicate the best performance and the second-best performance among all models, respectively.
 
 ### Ablation Studies
 
