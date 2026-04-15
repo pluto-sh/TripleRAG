@@ -1,5 +1,5 @@
 """
-Triple RAG Configuration File
+DynamicRAG Configuration File
 """
 import os
 import yaml
@@ -48,7 +48,7 @@ class MySQLConfig:
     port: int = 3306
     user: str = 'root'
     password: str = 'your_password'  # Please change to your MySQL password
-    database: str = 'triple_rag_db'
+    database: str = 'dynamic_rag_db'
 
 @dataclass
 class SQLiteConfig:
@@ -115,8 +115,8 @@ class DAGConfig:
     adaptive_optimizer: DAGAdaptiveOptimizerConfig = field(default_factory=DAGAdaptiveOptimizerConfig)
 
 @dataclass
-class TripleRAGConfig:
-    """Triple RAG Main Configuration"""
+class DynamicRAGConfig:
+    """DynamicRAG Main Configuration"""
     # Path configuration
     paths: PathConfig = field(default_factory=PathConfig)
 
@@ -306,4 +306,4 @@ class TripleRAGConfig:
         print(f"{'='*60}\n")
 
 # Global configuration instance
-config = TripleRAGConfig()
+config = DynamicRAGConfig()

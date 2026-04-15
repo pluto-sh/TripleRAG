@@ -1,11 +1,11 @@
 """
-Triple RAG Main System
+DynamicRAG Main System
 Integrates query understanding, multi-channel retrieval, fusion engine, and output generator
 """
 import time
 from typing import List, Dict, Any, Optional
 import logging
-from .models import TripleRAGResponse, QueryPlan, RetrievalResult, FusedResult, QueryType
+from .models import DynamicRAGResponse, QueryPlan, RetrievalResult, FusedResult, QueryType
 from .query_router import QueryRouter
 from ..retrievers.sqlite_retriever import MySQLRetrieverAdapter
 from ..retrievers.neo4j_retriever import Neo4jRetriever
@@ -14,8 +14,8 @@ from .fusion_engine import FusionEngine
 from .output_generator import OutputGenerator
 from config.config import config
 
-class TripleRAG:
-    """Triple RAG Main System"""
+class DynamicRAG:
+    """DynamicRAG Main System"""
 
     def __init__(self):
         """Initialize system components"""
@@ -49,11 +49,11 @@ class TripleRAG:
         # ========== DAG Executor Initialization ==========
         from src.core.dag_executor import DAGExecutor
         self.dag_executor = DAGExecutor()
-        print("Triple RAG system DAG mode enabled")
+        print("DynamicRAG system DAG mode enabled")
 
-        print("Triple RAG system initialization complete")
+        print("DynamicRAG system initialization complete")
 
-    def query(self, user_query: str) -> TripleRAGResponse:
+    def query(self, user_query: str) -> DynamicRAGResponse:
         """
         Process user query (DAG mode)
 
@@ -61,7 +61,7 @@ class TripleRAG:
             user_query: User query
 
         Returns:
-            TripleRAGResponse: System response
+            DynamicRAGResponse: System response
         """
         # Create new log file for each query
         from ..utils.output_manager import setup_logging, get_current_log_file
@@ -72,15 +72,15 @@ class TripleRAG:
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         logs_dir = config.paths.get_absolute_path(config.paths.logs_dir)
         os.makedirs(logs_dir, exist_ok=True)
-        log_file = os.path.join(logs_dir, f"triple_rag_{timestamp}.log")
+        log_file = os.path.join(logs_dir, f"dynamic_rag_{timestamp}.log")
         setup_logging(log_file)
 
         print(f"\nProcessing query: {user_query}")
         print(f"Log file: {log_file}")
-        logging.getLogger("triple_rag").info(f"User query: {user_query}")
+        logging.getLogger("dynamic_rag").info(f"User query: {user_query}")
         return self._query_with_dag(user_query)
 
-    def _query_with_dag(self, user_query: str) -> TripleRAGResponse:
+    def _query_with_dag(self, user_query: str) -> DynamicRAGResponse:
         """
         DAG query flow
 
@@ -88,7 +88,7 @@ class TripleRAG:
             user_query: User query
 
         Returns:
-            TripleRAGResponse: System response
+            DynamicRAGResponse: System response
         """
         start_time = time.time()
 
@@ -138,7 +138,7 @@ class TripleRAG:
                 inference=f"DAG execution failed: {str(e)}"
             )
 
-            error_response = TripleRAGResponse(
+            error_response = DynamicRAGResponse(
                 query=user_query,
                 answer=f"Sorry, an error occurred while processing your query: {str(e)}",
                 fused_results=[],
@@ -249,16 +249,16 @@ class TripleRAG:
         except:
             pass
 
-        print("Triple RAG system closed")
+        print("DynamicRAG system closed")
 
 # Convenience functions
-def create_triple_rag() -> TripleRAG:
-    """Create Triple RAG instance"""
-    return TripleRAG()
+def create_dynamic_rag() -> DynamicRAG:
+    """Create DynamicRAG instance"""
+    return DynamicRAG()
 
 def quick_query(query: str, simple_format: bool = True) -> str:
     """Quick query function"""
-    rag = create_triple_rag()
+    rag = create_dynamic_rag()
     try:
         result = rag.get_formatted_response(query, simple_format)
         return result

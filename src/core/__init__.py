@@ -1,3 +1,3 @@
 """
-Triple RAG Core Components
+DynamicRAG Core Components
 """

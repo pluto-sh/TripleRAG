@@ -1,3 +1,3 @@
 """
-Triple RAG Retriever Component
+DynamicRAG Retriever Component
 """

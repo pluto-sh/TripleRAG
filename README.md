@@ -1,10 +1,10 @@
-# Triple RAG
+# DynamicRAG
 
 **An Industrial-Grade Multi-Source Heterogeneous Data Intelligent Q&A System**
 
-Triple RAG implements complex query decomposition and parallel processing through DAG (Directed Acyclic Graph) orchestration, supporting multi-modal fusion retrieval across structured data (SQLite/MySQL), graph data (Neo4j), and semantic data (Vector DB).
+DynamicRAG implements complex query decomposition and parallel processing through DAG (Directed Acyclic Graph) orchestration, supporting multi-modal fusion retrieval across structured data (SQLite/MySQL), graph data (Neo4j), and semantic data (Vector DB).
 The core codes and data related to the paper have been made open source. Due to time constraints, some parts are still under review and will be made open source as soon as possible.
-All the data of the benchmark can be obtained from https://huggingface.co/datasets/oo123123/TripleRAG.
+All the data of the benchmark can be obtained from https://huggingface.co/datasets/oo123123/DynamicRAG.
 
 ---
 
@@ -34,8 +34,8 @@ All the data of the benchmark can be obtained from https://huggingface.co/datase
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/Triple_RAG.git
-cd Triple_RAG
+git clone https://github.com/your-org/dynamic_rag.git
+cd dynamic_rag
 
 # Install dependencies
 pip install -r requirements.txt
@@ -64,7 +64,7 @@ class Neo4jConfig:
 
 ### 3. Prepare Dataset
 
-Due to data size limitations, GitHub only contains the QAPair dataset. The complete benchmark data can be obtained from [https://huggingface.co/datasets/oo123123/TripleRAG](https://huggingface.co/datasets/oo123123/TripleRAG).
+Due to data size limitations, GitHub only contains the QAPair dataset. The complete benchmark data can be obtained from [https://huggingface.co/datasets/oo123123/DynamicRAG](https://huggingface.co/datasets/oo123123/DynamicRAG).
 
 **GitHub Repository (Limited)**:
 - `dataset/QAPair/` - Question-answer pairs for ChainHopQA and HotpotQA (Reconstruction)
@@ -105,7 +105,7 @@ python main.py --input dataset/queries.json --output results.jsonl
 
 ## 🏗️ System Architecture
 
-Triple RAG adopts a 4-layer architecture:
+DynamicRAG adopts a 4-layer architecture:
 
 ![System Architecture](./figure/figure1.png)
 
@@ -143,7 +143,7 @@ Triple RAG adopts a 4-layer architecture:
 ## 📂 Project Structure
 
 ```
-Triple_RAG_main/
+dynamic_rag_main/
 ├── README.md              # This file
 ├── LICENSE                # MIT License
 ├── requirements.txt       # Python dependencies
@@ -194,7 +194,7 @@ Update `config/config.py` with your database credentials and paths.
 
 ### Triple-Modal Multi-Hop Benchmark Results
 
-As shown in Table 1, the experimental results on the triple-modal multi-hop QA benchmarks demonstrate that TripleRAG achieves the best or second performance across both the ChainHopQA and HotpotQA (Reconstruction) datasets. Specifically, on the Str-Acc metric, TripleRAG attains 27.6% and 27.5% on ChainHopQA and HotpotQA, respectively, outperforming all baseline graph-based and agentic RAG methods. On the LLM-Acc metric, TripleRAG achieves the best result of 39.1% on HotpotQA, while on ChainHopQA it reaches 30.3%, which is second only to IRCoT (31.1%). In conclusion, compared to current leading agentic RAG methods such as IRCoT and LogicRAG, TripleRAG demonstrates more stable overall performance and higher comprehensive accuracy in multimodal scenarios, validating the effectiveness of its dynamic DAG planning and multimodal retrieval fusion mechanisms.
+As shown in Table 1, the experimental results on the triple-modal multi-hop QA benchmarks demonstrate that DynamicRAG achieves the best or second performance across both the ChainHopQA and HotpotQA (Reconstruction) datasets. Specifically, on the Str-Acc metric, DynamicRAG attains 27.6% and 27.5% on ChainHopQA and HotpotQA, respectively, outperforming all baseline graph-based and agentic RAG methods. On the LLM-Acc metric, DynamicRAG achieves the best result of 39.1% on HotpotQA, while on ChainHopQA it reaches 30.3%, which is second only to IRCoT (31.1%). In conclusion, compared to current leading agentic RAG methods such as IRCoT and LogicRAG, DynamicRAG demonstrates more stable overall performance and higher comprehensive accuracy in multimodal scenarios, validating the effectiveness of its dynamic DAG planning and multimodal retrieval fusion mechanisms.
 
 ![Table 1: Triple-modal Multi-Hop Benchmark Results](./figure/table1.png)
 
@@ -202,7 +202,7 @@ As shown in Table 1, the experimental results on the triple-modal multi-hop QA b
 
 ### Single-Modal Multi-Hop Benchmark Results
 
-To verify the generalizability of TripleRAG's core mechanisms, DynamicRAG is evaluated on single-modality scenarios. As shown in Table 2, DynamicRAG achieves competitive or slightly better performance compared to LogicRAG and HippoRAG2 across three standard multi-hop reasoning benchmarks. This demonstrates that the core mechanisms—node type pre-allocation and dynamic switching—have broad applicability beyond multimodal scenarios, validating their effectiveness as general design principles for RAG systems.
+To verify the generalizability of DynamicRAG's core mechanisms, DynamicRAG-Text is evaluated on single-modality scenarios. As shown in Table 2, DynamicRAG-Text achieves competitive or slightly better performance compared to LogicRAG and HippoRAG2 across three standard multi-hop reasoning benchmarks. This demonstrates that the core mechanisms—node type pre-allocation and dynamic switching—have broad applicability beyond multimodal scenarios, validating their effectiveness as general design principles for RAG systems.
 
 ![Table 2: Single-Modal Multi-Hop Benchmark Results](./figure/table2.png)
 
@@ -212,12 +212,12 @@ To verify the generalizability of TripleRAG's core mechanisms, DynamicRAG is eva
 
 ![Multimodal Fusion Ablation Study](./figure/figure2.png)
 
-**Figure 2**: Ablation study on retrieval modalities shows that the full TripleRAG system with multimodal fusion outperforms single-modal approaches by 3.2-3.7 percentage points.
+**Figure 2**: Ablation study on retrieval modalities shows that the full DynamicRAG system with multimodal fusion outperforms single-modal.
 
 ![System Mechanisms Ablation Study](./figure/figure3.png)
 
 **Figure 3**: Ablation study on core mechanisms demonstrates:
-- **Dynamic switching** is crucial: 6.8% Str-Acc drop on ChainHopQA when disabled
+- **Dynamic switching** is crucial: 6.4% Str-Acc drop on ChainHopQA when disabled
 - **LLM-based planning** provides moderate benefits
 - Full system achieves optimal performance
 
@@ -311,18 +311,18 @@ Node 4: Synthesize final answer (Inference)
 
 1. Create a new retriever in `src/retrievers/`
 2. Implement the `retrieve(query: str) -> List[Dict]` method
-3. Register in `src/core/triple_rag.py`
+3. Register in `src/core/dynamic_rag.py`
 
 ---
 
 ## 📝 Citation
 
-If you use Triple RAG in your research, please cite:
+If you use DynamicRAG in your research, please cite:
 
 ```bibtex
-@article{triplerag2025,
-  title={Triple RAG: An Industrial-Grade Multi-Source Heterogeneous Data Intelligent Q\&A System},
-  author={TripleRAG Development Team},
+@article{dynamicrag2025,
+  title={DynamicRAG: An Adaptive DAG-based Multimodal Retrieval-Augmented Generation Framework for Fragmented Industrial Knowledge},
+  author={DynamicRAG Development Team},
   year={2025}
 }
 ```

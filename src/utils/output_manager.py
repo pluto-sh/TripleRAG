@@ -21,7 +21,7 @@ def setup_logging(log_file: str = None):
     with _log_lock:
         # If there's already a current log file and no new file specified, reuse existing one
         if _current_log_file is not None and log_file is None:
-            return logging.getLogger("triple_rag")
+            return logging.getLogger("dynamic_rag")
 
         # If new log file is specified, or need to create new one
         if log_file is None:
@@ -30,12 +30,12 @@ def setup_logging(log_file: str = None):
             logs_dir = config.paths.get_absolute_path(config.paths.logs_dir)
             os.makedirs(logs_dir, exist_ok=True)
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            log_file = os.path.join(logs_dir, f"triple_rag_{timestamp}.log")
+            log_file = os.path.join(logs_dir, f"dynamic_rag_{timestamp}.log")
 
         _current_log_file = log_file
 
     # Create logger
-    logger = logging.getLogger("triple_rag")
+    logger = logging.getLogger("dynamic_rag")
     logger.setLevel(logging.DEBUG)
 
     # Clear previous handlers

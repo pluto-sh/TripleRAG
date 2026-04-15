@@ -1,5 +1,5 @@
 """
-Triple RAG - Batch Processing Entry Point
+DynamicRAG - Batch Processing Entry Point
 
 This is a simplified version that only supports batch query processing.
 For interactive mode or other features, please refer to the full implementation.
@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import argparse
 import json
 import time
-from src.core.triple_rag import TripleRAG
+from src.core.dynamic_rag import DynamicRAG
 
 def batch_query_mode(input_file, output_file):
     """
@@ -23,7 +23,7 @@ def batch_query_mode(input_file, output_file):
         input_file: Input queries file (JSON format)
         output_file: Output results file (JSONL format)
     """
-    rag = TripleRAG()
+    rag = DynamicRAG()
 
     try:
         # Read query file (JSON format)
@@ -40,9 +40,9 @@ def batch_query_mode(input_file, output_file):
             qa_pairs = data
             print(f"[Batch Mode] Detected LogicRAG format data")
         elif isinstance(data, dict) and 'qa_pairs' in data:
-            # Traditional Triple RAG format: with qa_pairs key
+            # Traditional DynamicRAG format: with qa_pairs key
             qa_pairs = data.get('qa_pairs', [])
-            print(f"[Batch Mode] Detected Triple RAG format data")
+            print(f"[Batch Mode] Detected DynamicRAG format data")
         else:
             print(f"[Batch Mode] Unknown data format, trying to process as list")
             qa_pairs = data if isinstance(data, list) else []
@@ -112,7 +112,7 @@ def batch_query_mode(input_file, output_file):
 def main():
     """Main function"""
     parser = argparse.ArgumentParser(
-        description='Triple RAG System - Batch Processing Mode',
+        description='DynamicRAG System - Batch Processing Mode',
         epilog='Example: python main.py --input dataset/queries.json --output results.jsonl'
     )
     parser.add_argument('--input', type=str, required=True,

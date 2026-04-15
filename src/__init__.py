@@ -1,3 +1,3 @@
 """
-Triple RAG Source Code
+DynamicRAG Source Code
 """

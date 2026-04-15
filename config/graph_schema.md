@@ -1,4 +1,4 @@
-# Triple_RAG Neo4j Graph Database Schema
+# dynamic_rag Neo4j Graph Database Schema
 
 ### Primary Node Types
 - **Product** (1,933 nodes): Product-related nodes, including metals, minerals, chemical products, etc.

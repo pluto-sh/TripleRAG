@@ -25,7 +25,7 @@ from src.core.dag_models import QueryDAG, DAGNode, UnifiedNodeResult, NodeStatus
 from src.core.memory import Memory
 from src.utils.output_manager import output_manager
 
-# import existing Triple RAG components (reuse)
+# import existing DynamicRAG components (reuse)
 try:
     from src.core.query_router import QueryRouter
     from src.retrievers.sqlite_retriever import MySQLRetrieverAdapter
@@ -33,11 +33,11 @@ try:
     from src.retrievers.vector_retriever import VectorRetriever
     from src.core.fusion_engine import FusionEngine
     from src.core.output_generator import OutputGenerator
-    from src.core.models import TripleRAGResponse
+    from src.core.models import DynamicRAGResponse
     from config.config import config
 except ImportError as e:
     print(f"warning: unable to import existing modules: {e}")
-    print("Requires existing Triple RAG components for support")
+    print("Requires existing DynamicRAG components for support")
 
 
 class DAGExecutor:
@@ -129,7 +129,7 @@ class DAGExecutor:
 
         print(f"[DAGExecutor] Initialization completed - Database: {self.database_type.upper()}")
 
-    def execute_dag(self, dag: QueryDAG, original_query: str) -> TripleRAGResponse:
+    def execute_dag(self, dag: QueryDAG, original_query: str) -> DynamicRAGResponse:
         """
         Enhanced: execute DAG (supports linear and branching DAG)
 
@@ -138,7 +138,7 @@ class DAGExecutor:
             original_query: original query
 
         Returns:
-            TripleRAGResponse object
+            DynamicRAGResponse object
         """
         # log user's original query
         from ..utils.output_manager import log_user_query
@@ -170,7 +170,7 @@ class DAGExecutor:
         # Enhanced: unified DAG execution strategy, no longer distinguishing linear and branching
         return self._execute_dag(dag, original_query, memory, start_time)
 
-    def _execute_dag(self, dag: QueryDAG, original_query: str, memory: Memory, start_time: float) -> TripleRAGResponse:
+    def _execute_dag(self, dag: QueryDAG, original_query: str, memory: Memory, start_time: float) -> DynamicRAGResponse:
         """
         Enhanced: unified DAG execution (supports any complex structure)
         Enhanced: supports intra-layer parallel, inter-layer sequential execution
@@ -229,7 +229,7 @@ class DAGExecutor:
         # generate final answer
         return self._generate_final_response(dag, original_query, memory, start_time)
 
-    def _execute_branching_dag(self, dag: QueryDAG, original_query: str, memory: Memory, start_time: float) -> TripleRAGResponse:
+    def _execute_branching_dag(self, dag: QueryDAG, original_query: str, memory: Memory, start_time: float) -> DynamicRAGResponse:
         """
         Enhanced: execute branching DAG
         """
@@ -343,7 +343,7 @@ class DAGExecutor:
     # ========== Adaptive Optimizer Helper Methods (Simplified) ==========
     # _apply_execution_modes is deprecated, optimizer no longer marks execution mode
 
-    def _generate_final_response(self, dag: QueryDAG, original_query: str, memory: Memory, start_time: float) -> TripleRAGResponse:
+    def _generate_final_response(self, dag: QueryDAG, original_query: str, memory: Memory, start_time: float) -> DynamicRAGResponse:
         """
         generate final response (generic method)
         """
@@ -405,12 +405,12 @@ class DAGExecutor:
                 for nid in last_nodes:
                     res = all_results.get(nid)
                     if res and getattr(res, 'answer_text', None):
-                        logging.getLogger("triple_rag").info(f"Last-node {nid} answer: {res.answer_text}")
-            logging.getLogger("triple_rag").info(f"Final answer: {final_answer}")
+                        logging.getLogger("dynamic_rag").info(f"Last-node {nid} answer: {res.answer_text}")
+            logging.getLogger("dynamic_rag").info(f"Final answer: {final_answer}")
         except Exception:
             pass
 
-        # create empty query_plan and fused_results to satisfy TripleRAGResponse requirements
+        # create empty query_plan and fused_results to satisfy DynamicRAGResponse requirements
         from src.core.models import QueryPlan, FusedResult, QueryType
 
         # create basic query plan
@@ -485,7 +485,7 @@ class DAGExecutor:
             metadata_summary=f"DAG execution result, successful nodes: {success_count}/{len(all_results)}"
         )]
 
-        return TripleRAGResponse(
+        return DynamicRAGResponse(
             query=original_query,
             answer=final_answer,
             fused_results=dummy_fused_results,
@@ -499,7 +499,7 @@ class DAGExecutor:
     def _execute_node_with_retry(self, dag: QueryDAG, node: DAGNode, memory: Memory) -> UnifiedNodeResult:
         """execute single node (with retry mechanism) - delegated to NodeAgent"""
         if not self.node_agent:
-            # explicitly fail to trigger upper layer TripleRAG's old system fallback
+            # explicitly fail to trigger upper layer DynamicRAG's old system fallback
             raise RuntimeError("NodeAgent unavailable, cannot execute node.")
         return self.node_agent.execute_node_with_retry(node, memory, dag=dag)
 

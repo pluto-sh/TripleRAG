@@ -19,7 +19,7 @@ from ..core.models import RetrievalResult, RetrievalMetadata
 from config.config import config
 from ..utils.output_manager import output_manager
 
-logger = logging.getLogger('triple_rag')
+logger = logging.getLogger('dynamic_rag')
 
 
 class OllamaEmbedding:
@@ -153,7 +153,7 @@ class VectorRetriever:
             except:
                 self.collection = self.chroma_client.create_collection(
                     name=config.vector_db.collection_name,
-                    metadata={"description": "Triple RAG document collection"}
+                    metadata={"description": "DynamicRAG document collection"}
                 )
                 print(f"Created new collection: {config.vector_db.collection_name}")
 
@@ -447,7 +447,7 @@ Output format: Directly output the rewritten query text, without any prefix or e
                 # Recreate collection
                 self.collection = self.chroma_client.create_collection(
                     name=config.vector_db.collection_name,
-                    metadata={"description": "Triple RAG document collection"}
+                    metadata={"description": "DynamicRAG document collection"}
                 )
                 print("Collection cleared and recreated")
             except Exception as e:

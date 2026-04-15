@@ -4,7 +4,7 @@ Handles result formatting and DAG multi-node answer aggregation
 """
 from typing import List, Dict, Any
 from openai import OpenAI
-from .models import FusedResult, TripleRAGResponse, QueryPlan, RetrievalResult, QueryType
+from .models import FusedResult, DynamicRAGResponse, QueryPlan, RetrievalResult, QueryType
 from config.config import config
 from ..utils.llm_client import build_openai_client
 from ..utils.output_manager import output_manager
@@ -17,7 +17,7 @@ class OutputGenerator:
 
     def generate_response(self, query: str, fused_results: List[FusedResult],
                          query_plan: QueryPlan, total_execution_time: float,
-                         retrieval_results: List[RetrievalResult] = None) -> TripleRAGResponse:
+                         retrieval_results: List[RetrievalResult] = None) -> DynamicRAGResponse:
         """Generate final response"""
 
         # Generate main answer
@@ -27,7 +27,7 @@ class OutputGenerator:
         explanation = self._generate_explanation(query, fused_results, query_plan, total_execution_time)
 
         # Create response object
-        response = TripleRAGResponse(
+        response = DynamicRAGResponse(
             query=query,
             answer=answer,
             fused_results=fused_results,
@@ -137,13 +137,13 @@ class OutputGenerator:
 
         return "\n".join(explanation_parts)
     
-    def format_detailed_response(self, response: TripleRAGResponse) -> str:
+    def format_detailed_response(self, response: DynamicRAGResponse) -> str:
         """Format detailed response"""
 
         output_parts = []
 
         # Title
-        output_parts.append("# Triple RAG Retrieval Results")
+        output_parts.append("# DynamicRAG Retrieval Results")
         output_parts.append(f"**Query**: {response.query}")
         output_parts.append("")
 
@@ -177,7 +177,7 @@ class OutputGenerator:
 
         return "\n".join(output_parts)
 
-    def format_simple_response(self, response: TripleRAGResponse) -> str:
+    def format_simple_response(self, response: DynamicRAGResponse) -> str:
         """Format simple response"""
 
         output_parts = []
@@ -203,7 +203,7 @@ class OutputGenerator:
 
         return "\n".join(output_parts)
 
-    def export_to_json(self, response: TripleRAGResponse) -> Dict[str, Any]:
+    def export_to_json(self, response: DynamicRAGResponse) -> Dict[str, Any]:
         """Export to JSON format"""
 
         # Use retrieved_contexts field already in response object

@@ -1,6 +1,6 @@
 # Dataset Directory
 
-This directory contains the data required by the Triple RAG system. Due to file size limitations, the complete multimodal benchmark dataset is available on Hugging Face.
+This directory contains the data required by the DynamicRAG system. Due to file size limitations, the complete multimodal benchmark dataset is available on Hugging Face.
 
 ## 📊 Data Availability
 
@@ -12,7 +12,7 @@ This repository contains only the **QAPair** dataset:
 - **ReconHotPotQA_full.json** - Extended HotpotQA dataset
 
 ### Complete Dataset (Hugging Face)
-The full multimodal benchmark data is available at: [https://huggingface.co/datasets/oo123123/TripleRAG](https://huggingface.co/datasets/oo123123/TripleRAG)
+The full multimodal benchmark data is available at: [https://huggingface.co/datasets/oo123123/DynamicRAG](https://huggingface.co/datasets/oo123123/DynamicRAG)
 
 **Complete dataset includes:**
 - **SQLite Databases**: Structured transactional data with enterprise trade information

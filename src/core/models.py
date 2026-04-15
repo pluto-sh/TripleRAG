@@ -1,5 +1,5 @@
 """
-Triple RAG Data Model Definitions
+DynamicRAG Data Model Definitions
 """
 from dataclasses import dataclass
 from typing import List, Dict, Any, Optional
@@ -74,8 +74,8 @@ class FusedResult:
             self.score = self.confidence
 
 @dataclass
-class TripleRAGResponse:
-    """Triple RAG final response"""
+class DynamicRAGResponse:
+    """DynamicRAG final response"""
     query: str
     answer: str
     fused_results: List[FusedResult]
